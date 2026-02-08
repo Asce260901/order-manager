@@ -1,24 +1,24 @@
 let inventory = [
     {
-        SKU: "SKU-6001000",
+        sku: "SKU-6001000",
         productName: "Desktop Table",
         price: 512.72,
         stock: 65,
     },
     {
-        SKU: "SKU-6001001",
+        sku: "SKU-6001001",
         productName: "Pink glasses",
         price: 15.36,
         stock: 236,
     },
     {
-        SKU: "SKU-6001002",
+        sku: "SKU-6001002",
         productName: "Picture frame",
         price: 23.99,
         stock: 384,
     },
     {
-        SKU: "SKU-6001003",
+        sku: "SKU-6001003",
         productName: "Vanity Mirror",
         price: 37.25,
         stock: 469,
@@ -27,12 +27,12 @@ let inventory = [
 
 //One line Summary For Initial Inventory
 inventory.forEach((inventory) =>
-    console.log(`${inventory.SKU} | ${inventory.productName} | $${inventory.price} | ${inventory.stock}`)
+    console.log(`${inventory.sku} | ${inventory.productName} | $${inventory.price} | ${inventory.stock}`)
 );
 
 //New product
 inventory.push({
-    SKU: "SKU-6001004",
+    sku: "SKU-6001004",
     productName: "Toothbrush",
     price: 7.51,
     stock: 633,
@@ -59,51 +59,50 @@ let orders = [
     {
         orderId: "ORD-7001000",
         items:[
-            {SKU: "SKU-6001000", quantity:70},
-            {SKU: "SKU-6001003", quantity:12}
+            {sku: "SKU-6001000", quantity:70},
+            {sku: "SKU-6001003", quantity:12}
         ]
     },
     {
         orderId: "ORD-7001001",
         items:[
-            {SKU: "SKU-6001002", quantity:300},
-            {SKU: "SKU-6001001", quantity:200}
+            {sku: "SKU-6001002", quantity:300},
+            {sku: "SKU-6001001", quantity:200}
         ]
     },
     {
         orderId: "ORD-7001002",
         items: [
-            {SKU: "SKU-6001004", quantity:52},
-            {SKU: "SKU-6001002", quantity:12}
+            {sku: "SKU-6001004", quantity:52},
+            {sku: "SKU-6001002", quantity:12}
         ]
     }
 ];
 
 //Product finder by SKU function 
-function findproductsBySku(SKU){
-    let product = inventory.find((p) => p.SKU === SKU);
+function findproductsBySku(sku){
+    let product = inventory.find((p) => p.sku === sku);
     return product ? product: null;
 }
 
 //Function for order processing
 function processOrder(order){
     for (let item of order.items){
-        let product = findproductsBySku(item.SKU);
+        let product = findproductsBySku(item.sku);
 
         if (!product){
-            return `Order ${order.orderId} cannot be completed: SKU ${item.SKU} not found in inventory.`;
+            return `Order ${order.orderId} cannot be completed: SKU ${item.sku} not found in inventory.`;
         }
         if (product.stock < item.quantity){
             let deficit = item.quantity - product.stock
             return `Order ${order.orderId} cannot be completed: Product ${product.productName} is short by ${deficit} unit(s).`;
         }
     }
-        let total = 0;
         for (let item of order.items){
-            let product = findproductsBySku(item.SKU);
+            let product = findproductsBySku(item.sku);
             
             product.stock -= item.quantity;
-            total += product.price * item.quantity;
+            total = product.price * item.quantity;
         }
         return `Order ${order.orderId} has been completed: Order total = $${total.toFixed(2)}`;
 }
@@ -118,7 +117,13 @@ orders.forEach((order) =>{
 //Reamining stock
 console.log(`Remaining stock after orders`);
 inventory.forEach((p) => {
-    console.log(`${p.SKU} | ${p.productName} | $${p.price} | Stock: ${p.stock}`);
+    console.log(`${p.sku} | ${p.productName} | $${p.price} | Stock: ${p.stock}`);
 });
 
+//Total inventory value
+let totalInventoryValue = inventory.reduce((sum,p) => sum + p.price * p.stock, 0);
+console.log(`Total Inventory Value: $${totalInventoryValue.toFixed(2)}`);
 
+//Low stock items less than 50 units
+let lowStockItems = inventory.filter((p) => p.stock <=50);
+lowStockItems.forEach((p) => console.log(`Low Stock Item: ${p.sku} | ${p.productName} | ${p.stock}`));
