@@ -4,24 +4,28 @@ let inventory = [
         productName: "Desktop Table",
         price: 512.72,
         stock: 65,
+        discountRate: 0.12,
     },
     {
         sku: "SKU-6001001",
         productName: "Pink glasses",
         price: 15.36,
         stock: 236,
+        discountRate : 0.07
     },
     {
         sku: "SKU-6001002",
         productName: "Picture frame",
         price: 23.99,
         stock: 384,
+        discountRate: 0.15
     },
     {
         sku: "SKU-6001003",
         productName: "Vanity Mirror",
         price: 37.25,
         stock: 469,
+        discountRate: 0.06
     }
 ];
 
@@ -98,11 +102,14 @@ function processOrder(order){
             return `Order ${order.orderId} cannot be completed: Product ${product.productName} is short by ${deficit} unit(s).`;
         }
     }
+    let total = 0;
         for (let item of order.items){
             let product = findproductsBySku(item.sku);
-            
+            let discountRate = product.discountRate;
+            let finalPriceAfterDiscount = product.price * (1 - discountRate);
             product.stock -= item.quantity;
-            total = product.price * item.quantity;
+            total += finalPriceAfterDiscount * item.quantity;
+            console.log(`Product: ${product.productName} | Quantity: ${item.quantity} | Original Price: $${product.price.toFixed(2)} | Discount: ${(discountRate * 100).toFixed(2)}% | Price after Discount: ${finalPriceAfterDiscount.toFixed(2)} `)
         }
         return `Order ${order.orderId} has been completed: Order total = $${total.toFixed(2)}`;
 }
