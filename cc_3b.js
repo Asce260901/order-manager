@@ -38,7 +38,7 @@ inventory.push({
     stock: 633,
 });
 
-//Last product removed and log it 
+//Last product removed 
 console.log("Product removed:", inventory.pop());
 
 //Product price update
@@ -127,3 +127,12 @@ console.log(`Total Inventory Value: $${totalInventoryValue.toFixed(2)}`);
 //Low stock items less than 50 units
 let lowStockItems = inventory.filter((p) => p.stock <=50);
 lowStockItems.forEach((p) => console.log(`Low Stock Item: ${p.sku} | ${p.productName} | ${p.stock}`));
+
+//Price list
+let priceList = inventory.map((p) => `${p.sku}:$${p.price}`);
+console.log(`Price List \n${priceList}`);
+
+//Sort inventory by Stock ascending
+let sortInvBySockAsc = inventory.sort((a,b) => a.stock - b.stock);
+console.log(`Inventory by Stock`)
+sortInvBySockAsc.forEach((p) => console.log(`${p.sku} | ${p.productName} | ${p.stock}`));
